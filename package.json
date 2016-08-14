@@ -1,0 +1,17 @@
+{
+  "name": "reddit-parenthesis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bufferutil": "^1.2.1",
+    "snoowrap": "^1.4.2",
+    "utf-8-validate": "^1.2.1",
+    "ws": "^1.1.1"
+  }
+}
