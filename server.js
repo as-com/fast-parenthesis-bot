@@ -2,7 +2,7 @@ const snoowrap = require("snoowrap");
 const websocket = require("ws");
 
 const SOCKET_SERVER = process.env.SOCKET_SERVER || "ws://192.168.1.65:3210";
-const SUBREDDITS = ["ProgrammerHumor"];
+const SUBREDDITS = ["ProgrammerHumor", "parenthesisbot"];
 
 const r = new snoowrap({
   user_agent: 'server:com.andrewsun.fastparenthesisbot:v0.1 (by /u/as-com)', // for more information, see: https://github.com/reddit/reddit/wiki/API
@@ -64,6 +64,7 @@ const closeList = {
 //    "<": true,
 //    ">": true
 };
+
 function processThing(body, id, fullname) {
     console.log("Processing " + fullname);
     let closers = [];
@@ -92,7 +93,7 @@ function processThing(body, id, fullname) {
             }
         }
     }
-    if (closers.length > 0) {
+    if (closers.length > 0 && closers.length < 20) {
     	closers.reverse();
         // oh noes, must fix
         r.oauth_request({
