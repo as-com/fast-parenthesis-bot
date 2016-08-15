@@ -1,5 +1,6 @@
 const snoowrap = require("snoowrap");
 const websocket = require("ws");
+const _ = require("lodash");
 
 const SOCKET_SERVER = process.env.SOCKET_SERVER || "ws://192.168.1.65:3210";
 const SUBREDDITS = ["ProgrammerHumor", "parenthesisbot"];
@@ -65,6 +66,14 @@ const closeList = {
 //    ">": true
 };
 
+const endingStatements = [
+	"You're welcome.",
+	"Bleep bloop.",
+	"This is an auto-generated response.",
+	"Meow.",
+	"What should I write here?"
+]
+
 function processThing(body, id, fullname) {
     console.log("Processing " + fullname);
     let closers = [];
@@ -100,7 +109,11 @@ function processThing(body, id, fullname) {
             uri: "/api/comment",
             method: "POST",
             form: {
-                text: /*"\\" + */closers.join("") + "\n\n---\nThis is an auto-generated response. [source](https://github.com/as-com/fast-parenthesis-bot) | [contact](https://www.reddit.com/message/compose/?to=as-com)",
+            	text:
+`${closers.join("")}
+
+---
+${_.sample(endingStatements)} [source](https://github.com/as-com/fast-parenthesis-bot) | [contact](https://www.reddit.com/message/compose/?to=as-com)`,
                 thing_id: fullname
             }
         }).then(console.log).catch(console.error);
