@@ -100,9 +100,10 @@ function processThing(body, id, fullname) {
             uri: "/api/comment",
             method: "POST",
             form: {
-                text: "\\" + closers.join("") + "\n\n---\nThis is an auto-generated response. [source](https://github.com/as-com/fast-parenthesis-bot) | [contact](https://www.reddit.com/message/compose/?to=as-com)",
+                text: /*"\\" + */closers.join("") + "\n\n---\nThis is an auto-generated response. [source](https://github.com/as-com/fast-parenthesis-bot) | [contact](https://www.reddit.com/message/compose/?to=as-com)",
                 thing_id: fullname
             }
         }).then(console.log).catch(console.error);
     }
+    
 }
