@@ -13,7 +13,7 @@ const r = new snoowrap({
   password: process.env.REDDIT_PASSWORD
 });
 r.config({
-    request_delay: 1001,
+//     request_delay: 1001,
     continue_after_ratelimit_error: true,
     retry_error_codes: [500, 502, 503, 504, 522, 521, 520, 524, 523],
     max_retry_attempts: 5
