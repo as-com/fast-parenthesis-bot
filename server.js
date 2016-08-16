@@ -50,7 +50,7 @@ function connectPosts() {
 	ws_posts = new websocket(SOCKET_SERVER);
     ws_posts.on("open", function() {
         console.log("Connected!");
-        ws.send(JSON.stringify({
+        ws_posts.send(JSON.stringify({
             "channel": "posts",
             "include": {
                 subreddit: SUBREDDITS
