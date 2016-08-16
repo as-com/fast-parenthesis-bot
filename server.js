@@ -38,7 +38,7 @@ function connect() {
     ws.on("message", function(data) {
         // console.log("Got comment " + model.id);
         let model = JSON.parse(data);
-        processThing(model.body, model.id, model.name);
+        processThing(model.body, model.id, model.name, model.subreddit);
     });
     ws.on("close", function(data) {
         console.warn("Connection closed!");
@@ -72,9 +72,35 @@ const endingStatements = [
 	"This is an auto-generated response.",
 	"Meow.",
 	"What should I write here?"
-]
+];
 
-function processThing(body, id, fullname) {
+const antiSpam = [
+	"Please don't spam.",
+	"MEEEOOOOOOWWW!!!",
+	"Friend Computer is not impressed by your spamming."
+];
+
+const extremeAntiSpam = [
+	"ARRRRGH!",
+	"Seriously, stop spamming."
+];
+
+function postReply(thing_id, text) {
+	r.oauth_request({
+        uri: "/api/comment",
+        method: "POST",
+        form: {
+            text:
+`${text}
+
+---
+${_.sample(endingStatements)} [source](https://github.com/as-com/fast-parenthesis-bot) | [contact](https://www.reddit.com/message/compose/?to=as-com)`,
+            thing_id: fullname
+        }
+    }).then(console.log).catch(console.error);
+}
+
+function processThing(body, id, fullname, subreddit) {
     console.log("Processing " + fullname);
     let closers = [];
     let b = [];
@@ -102,21 +128,24 @@ function processThing(body, id, fullname) {
             }
         }
     }
-    if (closers.length > 0 && closers.length < 20) {
+    if (closers.length > 0 && (closers.length <= 15 || subreddit === "parenthesisbot")) {
     	closers.reverse();
         // oh noes, must fix
-        r.oauth_request({
-            uri: "/api/comment",
-            method: "POST",
-            form: {
-            	text:
-`${closers.join("")}
+        postReply(fullname, closers.join(""));
+    } else if (closers.length > 50) {
+		postReply(fullname, `
+	 ▀  ▀ 
+	▀▄▄▄▄▀
+${_.sample(extremeAntiSpam)}
 
----
-${_.sample(endingStatements)} [source](https://github.com/as-com/fast-parenthesis-bot) | [contact](https://www.reddit.com/message/compose/?to=as-com)`,
-                thing_id: fullname
-            }
-        }).then(console.log).catch(console.error);
+If you have a need to fulfill your spamming desires, please do so in /r/parenthesisbot.`);
+    } else if (closers.length > 15) {
+    			postReply(fullname, `
+	 ▀  ▀ 
+	▀▄▄▄▄▀
+${_.sample(antiSpam)}
+
+If you have a need to fulfill your spamming desires, please do so in /r/parenthesisbot.`);
     }
     
 }
