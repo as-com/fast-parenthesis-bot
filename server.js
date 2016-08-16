@@ -126,6 +126,23 @@ ${_.sample(endingStatements)} [source](https://github.com/as-com/fast-parenthesi
     }).then(console.log).catch(console.error);
 }
 
+function getBigResp(closers) {
+	let bigresp = "";
+	if (closers.indexOf(":") !== -1) {
+		bigresp += "      ▀  ▀ \n";
+	}
+	if (closers.indexOf(")") !== -1) {
+	    bigresp += "     ▀▄▄▄▄▀\n";
+	}
+	if (closers.indexOf("}") !== -1) {
+		bigresp += "    ▚▂▞▚▞▚▂▞\n";
+	}
+	if (closers.indexOf("]") !== -1) {
+	    bigresp += "     ▙▄▄▄▄▟\n";
+	}
+	return bigresp;
+}
+
 function processThing(body, id, fullname, subreddit) {
     console.log("Processing " + fullname);
     let closers = [];
@@ -159,16 +176,15 @@ function processThing(body, id, fullname, subreddit) {
         // oh noes, must fix
         postReply(fullname, closers.join(""));
     } else if (closers.length > 50) {
+    	
 		postReply(fullname, `
-	 ▀  ▀ 
-	▀▄▄▄▄▀
+${getBigResp(closers)}
 ${_.sample(extremeAntiSpam)}
 
 If you have a need to fulfill your spamming desires, please do so in /r/parenthesisbot.`);
     } else if (closers.length > 15) {
     			postReply(fullname, `
-	 ▀  ▀ 
-	▀▄▄▄▄▀
+${getBigResp(closers)}
 ${_.sample(antiSpam)}
 
 If you have a need to fulfill your spamming desires, please do so in /r/parenthesisbot.`);
