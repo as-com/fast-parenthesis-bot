@@ -3,7 +3,7 @@ const websocket = require("ws");
 const _ = require("lodash");
 
 const SOCKET_SERVER = process.env.SOCKET_SERVER || "ws://192.168.1.65:3210";
-const SUBREDDITS = ["ProgrammerHumor", "parenthesisbot"];
+const SUBREDDITS = ["ProgrammerHumor", "parenthesisbot", "botsrights"];
 
 const r = new snoowrap({
   user_agent: 'server:com.andrewsun.fastparenthesisbot:v0.1 (by /u/as-com)', // for more information, see: https://github.com/reddit/reddit/wiki/API
@@ -19,7 +19,7 @@ r.config({
     max_retry_attempts: 5
 });
 
-let ws;
+let ws, ws_posts;
 function connect() {
     ws = new websocket(SOCKET_SERVER);
     ws.on("open", function() {
@@ -46,7 +46,33 @@ function connect() {
     });
 
 }
+function connectPosts() {
+	ws_posts = new websocket(SOCKET_SERVER);
+    ws_posts.on("open", function() {
+        console.log("Connected!");
+        ws.send(JSON.stringify({
+            "channel": "posts",
+            "include": {
+                subreddit: SUBREDDITS
+            },
+            "exclude": {
+                author: "fast-parenthesis-bot"
+            }
+        }));
+        console.log("Sent subscription for posts");
+    });
+    ws_posts.on("message", function(data) {
+        // console.log("Got comment " + model.id);
+        let model = JSON.parse(data);
+        processThing(model.title + " " + model.selftext, model.id, model.name, model.subreddit);
+    });
+    ws_posts.on("close", function(data) {
+        console.warn("Connection posts closed!");
+        connectPosts(); // reconnect
+    });
+}
 connect();
+connectPosts();
 
 const closeMap = {
     "(": ")",
@@ -95,7 +121,7 @@ function postReply(thing_id, text) {
 
 ---
 ${_.sample(endingStatements)} [source](https://github.com/as-com/fast-parenthesis-bot) | [contact](https://www.reddit.com/message/compose/?to=as-com)`,
-            thing_id: fullname
+            thing_id
         }
     }).then(console.log).catch(console.error);
 }
