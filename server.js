@@ -97,18 +97,23 @@ const endingStatements = [
 	"Bleep bloop.",
 	"This is an auto-generated response.",
 	"Meow.",
-	"What should I write here?"
+	"What should I write here?",
+	"I am your Lisp coding helper."
 ];
 
 const antiSpam = [
 	"Please don't spam.",
 	"MEEEOOOOOOWWW!!!",
-	"Friend Computer is not impressed by your spamming."
+	"You should probably learn to close your parenthesis properly.",
+	"Try not to spam, alright?"
 ];
 
 const extremeAntiSpam = [
 	"ARRRRGH!",
-	"Seriously, stop spamming."
+	"Seriously, stop spamming.",
+	"Friend Computer is not impressed with your spamming.",
+	"Ouch, too many parenthesis!",
+	"Stop trying to break my O(n^2) algorithm!"
 ];
 
 function postReply(thing_id, text) {
